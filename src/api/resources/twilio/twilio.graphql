@@ -1,0 +1,258 @@
+type subresource_uris_call {
+  notifications: String
+  recordings: String
+  feedback: String
+  feedback_summaries: String
+}
+type NumberCapabilities {
+  voice: Boolean
+  SMS: Boolean
+  MMS: Boolean
+  fax: Boolean
+}
+type NumberCapabilities2 {
+  voice: Boolean
+  sms: Boolean
+  mms: Boolean
+  fax: Boolean
+}
+# These are the available numbers returned by your
+# search
+type AvailableNumber {
+  friendlyName: String!
+  phoneNumber: String!
+  locality: String
+  region: String
+  postalCode: String
+  isoCountry: String
+  beta: Boolean
+  capabilities: NumberCapabilities!
+}
+type TwilioCall {
+  account_sid: String!
+  duration: String
+  annotation: String
+  answered_by: String
+  api_version: String
+  caller_name: String
+  date_created: String
+  date_updated: String
+  direction: String
+  end_time: String
+  forwarded_from: String
+  from: String
+  from_formatted: String
+  group_sid: String
+  parent_call_sid: String
+  phone_number_sid: String
+  price: String
+  price_unit: String
+  sid: String
+  start_time: String
+  status: String
+  subresource_uris: subresource_uris_call!
+  to: String
+  to_formatted: String!
+  uri: String!
+}
+type TwilioCallLog {
+  first_page_uri: String
+  previous_page_uri: String
+  page_size: Int
+  next_page_uri: String
+  uri: String
+  calls: [TwilioCallLogInstance]
+  url: String
+  page: Int
+}
+type TwilioCallLogInstance {
+  accountSid: String!
+  annotation: String
+  answered_by: String
+  api_version: String
+  caller_name: String
+  date_created: String
+  date_updated: String
+  direction: String
+  duration: String
+  endTime: String
+  forwarded_from: String
+  from: String
+  from_formatted: String
+  group_sid: String
+  parent_call_sid: String
+  phone_number_sid: String
+  price: String
+  price_unit: String
+  sid: String
+  start_time: String
+  status: String
+  subresource_uris: subresource_uris_call
+  to: String
+  to_formatted: String
+  uri: String
+  recording_url: String
+}
+type TwilioRecordingLog {
+  accountSid: String
+  apiVersion: String
+  callSid: String
+  conferenceSId: String
+  dateCreated: String
+  dateUpdated: String
+  price: String
+  priceUnit: String
+  sid: String
+  status: String
+  uri: String
+  source: String
+  errorCode: String
+  cahnnels: String
+}
+type subresource_uris_sms {
+  media: String
+  #It is for getting call log
+  notifications: String
+  recordings: String
+}
+
+type TwilioSms {
+  account_sid: String
+  api_version: String
+  body: String
+  date_created: String
+  date_sent: String
+  date_updated: String
+  direction: String
+  error_code: String
+  error_message: String
+  from: String
+  messaging_service_sid: String
+  num_media: String
+  num_segments: String
+  price: String
+  price_unit: String
+  sid: String
+  status: String
+  subresource_uris: subresource_uris_sms
+  to: String
+  uri: String
+  media_url: String
+}
+type TwilioNumbers {
+  beta: Boolean!
+  capabilities: NumberCapabilities2
+  friendlyName: String!
+  sid: String!
+  phoneNumber: String!
+}
+type TwilioSubAccounts {
+  limit: String
+  offset: String
+  subAccountsArray: [subAccountsArrayType]
+}
+type subAccountsArrayType {
+  dateCreated: String
+  dateUpdated: String
+  friendlyName: String
+  ownerAccountSid: String
+  sid: String!
+  status: String
+}
+input callObject {
+  to: String!
+  from: String!
+  callerId: String!
+}
+
+input TwilioCallLogInput {
+  accountSid: String
+  annotation: String
+  answeredBy: String
+  apiVersion: String
+  callerName: String
+  dateCreated: String
+  dateUpdated: String
+  direction: String
+  endTime: String
+  forwardedFrom: String
+  from: String
+  fromFormatted: String
+  groupSid: String
+  parentCallSid: String
+  phoneNumberSid: String
+  price: String
+  priceUnit: String
+  sid: String
+  startTime: String
+  status: String
+  to: String
+  toFormatted: String
+  uri: String
+  url: String
+  pageSize: Int!
+  getPage: Boolean
+  startTimeBefore: String
+  startTimeAfter: String
+}
+input TwilioRecordingLogInput {
+  accountSid: String
+  apiVersion: String
+  callSid: String
+  conferenceSId: String
+  dateCreated: String
+  dateUpdated: String
+  price: String
+  priceUnit: String
+  sid: String
+  status: String
+  uri: String
+  source: String
+  errorCode: String
+  cahnnels: String
+}
+input smsObject {
+  to: String!
+  from: String!
+  senderId: String!
+  content: String!
+}
+input AvailableNumberFilter {
+  areaCode: String
+}
+input AvailableNumberTollFreeFilter {
+  areaCode: String
+  contains: String
+}
+input numberToBuy {
+  number: String!
+}
+input numberToDelete {
+  sid: String!
+}
+input subAccountToSearch {
+  sid: String
+  friendlyName: String
+}
+type Query {
+  # Making call with desired number, This can be done
+  # With client hanheld phone,sip Phone, or Js Client
+  makeCall(input: callObject!): TwilioCall
+  # user can send sms from application to desired phone numebr
+  makeSms(input: smsObject!): TwilioSms
+  #Searches for available numbers to buy
+  searchNumberLocal(input: AvailableNumberFilter): [AvailableNumber!]
+  #Searches for available numbers to buy
+  searchNumberTollFree(input: AvailableNumberTollFreeFilter): [AvailableNumber!]
+  #Supply one of the availabale numbers to buy it for that account
+  getNumber(input: numberToBuy!): Boolean!
+  #It will get the call all types of call log for that specific account
+  getCallLog(input: TwilioCallLogInput): TwilioCallLog
+  #It will get all the recordings for the SubAccount
+  getRecording(input: TwilioRecordingLogInput): [TwilioRecordingLog]
+  #This will delete the number form subAccount
+  deleteNumber(input: numberToDelete): Boolean!
+  #This will list numbers form that subAccount
+  listNumbers: [TwilioNumbers!]
+  getAllSubAccounts(input: subAccountToSearch): TwilioSubAccounts!
+}

@@ -1,0 +1,8 @@
+node_modules
+*.log
+dist
+out
+DS_Store
+.env
+coverage/
+"yarn-error.log"

@@ -1,0 +1,20 @@
+language: node_js
+sudo: false
+env:
+  #These are fake just to prevent app to crash
+  - JWT_SECRET="" TWILIO_SID="" TWILIO_TOKEN=""
+node_js:
+  - "9.8.0"
+services:
+  - mongodb
+dist: xenial
+install:
+  - nvm install 9.8.0
+  - nvm install 9.8.0
+  - npm uninstall typescript --no-save
+  - npm uninstall tslint --no-save
+  - npm install
+before_script:
+  - sleep 15
+script:
+  - yarn test
