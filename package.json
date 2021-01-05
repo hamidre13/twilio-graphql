@@ -16,7 +16,7 @@
   "dependencies": {
     "apollo-errors": "^1.9.0",
     "apollo-server-express": "^2.5.0",
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "babel-core": "7.0.0-bridge.0",
     "babel-jest": "^24.8.0",
     "codemirror-graphql": "^0.8.3",
